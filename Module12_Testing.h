@@ -134,7 +134,7 @@ private:
     void buildTestStudents(Student students[], int& count) {
         count = 12;
         string names[] = { "hasham", "hafsa", "wajeeha", "naina", "sarah", "sparrow",
-                         "amer", "huzaifa", "maryum", "hamna", "azka", "misbah" };
+                         "amer", "huzaifa", "maryum", "hamna", "ali", "misbah" };
 
         for (int i = 0; i < count; i++) {
             students[i] = Student("S" + to_string(1001 + i), names[i]);
@@ -472,3 +472,4 @@ public:
 
 #endif 
 #pragma once
+
