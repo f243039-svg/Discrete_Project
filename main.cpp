@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include <raylib.h>
 #include "Course.h"
 #include "Student.h"
 #include "Module1_Scheduling.h"
@@ -17,7 +17,139 @@
 
 using namespace std;
 
-void buildSampleCourses(Course courses[], int &courseCount) {
+void showWelcomeWindow() {
+    const int screenWidth = 1000;
+    const int screenHeight = 700;
+
+    const int fontSizeTitle = 38;
+    const int fontSizeSubtitle = 25;
+    const int fontSizeOptions = 24;
+    const int fontSizeMembersTitle = 22;
+    const int fontSizeMembersName = 20;
+    const int fontSizeClosing = 18;
+    const int optionLineHeight = 32;
+    const int memberLineHeight = 25;
+
+    InitWindow(screenWidth, screenHeight, "FAST University Discrete Mathematics Project");
+
+    SetTargetFPS(60);
+
+    string menuOptions[] = {
+        "1. Scheduling",
+        "2. Grouping",
+        "3. Induction",
+        "4. Logic Engine",
+        "5. Set Operations",
+        "6. Relations",
+        "7. Functions",
+        "8. Proofs",
+        "9. Consistency Checker",
+        "10. Algorithmic Efficiency & Benchmarking",
+        "11. Unit Testing & Validation",
+        "",
+        "12. Run ALL Demos",
+        "0. Exit"
+    };
+    int optionCount = sizeof(menuOptions) / sizeof(menuOptions[0]);
+
+    string groupMembers[] = {
+        "Group Members:",
+        "Hasham",
+        "Hafsa",
+        "Wajiha"
+    };
+    int memberCount = sizeof(groupMembers) / sizeof(groupMembers[0]);
+
+    float timer = 0.0f;
+    const float displayDuration = 10.0f;
+
+    Color primaryColor = { 25, 125, 200, 255 };
+    Color secondaryColor = { 255, 190, 0, 255 };
+    Color accentColor = { 0, 200, 100, 255 };
+    Color backgroundColor = { 240, 248, 255, 255 };
+    Color textColor = { 50, 50, 50, 255 };
+    Color highlightColor = RED;
+
+    float pulseAlpha = 0.0f;
+
+    while (!WindowShouldClose() && timer < displayDuration) {
+        timer += GetFrameTime();
+        pulseAlpha = (sin(GetTime() * 3.0f) * 0.5f + 0.5f) * 0.3f;
+
+        BeginDrawing();
+
+        ClearBackground(backgroundColor);
+
+        const char* titleText = "FAST University Discrete Mathematics Project";
+        int titleWidth = MeasureText(titleText, fontSizeTitle);
+        int titleY = 30;
+        DrawText(titleText,
+            screenWidth / 2 - titleWidth / 2 + 2,
+            titleY + 2, fontSizeTitle, { 0,0,0, 100 });
+        DrawText(titleText,
+            screenWidth / 2 - titleWidth / 2,
+            titleY, fontSizeTitle, primaryColor);
+
+        int separatorY = titleY + fontSizeTitle + 10;
+        DrawRectangle(screenWidth / 2 - (screenWidth - 80) / 2, separatorY, screenWidth - 80, 5, secondaryColor);
+
+        int subtitleY = separatorY + 20;
+        const char* subtitleText = "Discrete Math Module Demos:";
+        DrawText(subtitleText,
+            screenWidth / 2 - MeasureText(subtitleText, fontSizeSubtitle) / 2,
+            subtitleY, fontSizeSubtitle, accentColor);
+
+        int currentOptionY = subtitleY + 40;
+        for (int i = 0; i < optionCount; i++) {
+            const char* optionText = menuOptions[i].c_str();
+
+            if (strlen(optionText) == 0) {
+                currentOptionY += 10;
+                continue;
+            }
+
+            DrawText(optionText,
+                screenWidth / 2 - MeasureText(optionText, fontSizeOptions) / 2,
+                currentOptionY, fontSizeOptions, textColor);
+            currentOptionY += optionLineHeight;
+        }
+
+        int groupBlockWidth = 200;
+        int groupBlockHeight = (memberCount * memberLineHeight);
+        int groupStartX = screenWidth - groupBlockWidth - 30;
+        int groupStartY = screenHeight - groupBlockHeight - 60;
+
+        const char* groupTitleText = groupMembers[0].c_str();
+        DrawText(groupTitleText,
+            groupStartX + groupBlockWidth / 2 - MeasureText(groupTitleText, fontSizeMembersTitle) / 2,
+            groupStartY, fontSizeMembersTitle, primaryColor);
+
+        for (int i = 1; i < memberCount; i++) {
+            const char* memberText = groupMembers[i].c_str();
+            DrawText(memberText,
+                groupStartX + groupBlockWidth / 2 - MeasureText(memberText, fontSizeMembersName) / 2,
+                groupStartY + (i * memberLineHeight) + 5,
+                fontSizeMembersName, textColor);
+        }
+
+        string countdownText = "Closing in: " + to_string((int)(displayDuration - timer)) + "s. Press ESC/ENTER to skip.";
+        Color animatedHighlight = highlightColor;
+        animatedHighlight.a = (unsigned char)(255 * (0.7 + pulseAlpha));
+        DrawText(countdownText.c_str(),
+            screenWidth / 2 - MeasureText(countdownText.c_str(), fontSizeClosing) / 2,
+            screenHeight - 40, fontSizeClosing, animatedHighlight);
+
+        EndDrawing();
+
+        if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_ENTER)) {
+            break;
+        }
+    }
+
+    CloseWindow();
+}
+
+void buildSampleCourses(Course courses[], int& courseCount) {
     courseCount = 5;
     courses[0] = Course("CS101", "Intro to Programming", 3);
     courses[1] = Course("CS102", "Into to SE", 3);
@@ -31,7 +163,7 @@ void buildSampleCourses(Course courses[], int &courseCount) {
     courses[3].addPrerequisite("MATH101");
 }
 
-void buildSampleStudents(Student students[], int &studentCount) {
+void buildSampleStudents(Student students[], int& studentCount) {
     studentCount = 6;
     students[0] = Student("S001", "Faizan");
     students[1] = Student("S002", "Usman");
@@ -60,7 +192,7 @@ void demoScheduling() {
     SchedulingModule sched;
     for (int i = 0; i < courseCount; i++)
         sched.addCourse(courses[i]);
-    
+
     sched.generateAllSchedules();
 }
 
@@ -167,15 +299,12 @@ void demoRelations() {
 void demoFunctions() {
     cout << "\n--- Functions Demo ---\n";
     FunctionModule f;
-    // Domain {1,2,3}
     f.addDomainElement("1");
     f.addDomainElement("2");
     f.addDomainElement("3");
-    // Codomain {A,B,C}
     f.addCodomainElement("A");
     f.addCodomainElement("B");
     f.addCodomainElement("C");
-    // Mapping: 1->A, 2->B, 3->C
     f.addMapping("1", "A");
     f.addMapping("2", "B");
     f.addMapping("3", "C");
@@ -190,7 +319,8 @@ void demoFunctions() {
     if (f.inverse(inv)) {
         cout << "Inverse mapping: ";
         inv.printFunction();
-    } else {
+    }
+    else {
         cout << "invalid\n";
     }
 }
@@ -236,16 +366,16 @@ void demoConsistency() {
 
     ConsistencyChecker cc;
     cc.runFullConsistencyCheck(courses, courseCount, students, studentCount,
-                               engine, sIdxs, codeList, 2,
-                               logicGoals, 1);
+        engine, sIdxs, codeList, 2,
+        logicGoals, 1);
 }
 
 void demoBenchmarking() {
     cout << "\n--- Benchmarking & Optimization Demo ---\n";
     BenchmarkModule bm;
-    
+
     bm.runFullBenchmark();
- 
+
     cout << "\n--- Additional Demo: Bit Operations ---\n";
     bm.demoBitSetOperations();
 }
@@ -253,13 +383,13 @@ void demoBenchmarking() {
 void demoUnitTesting() {
     cout << "\n--- Unit Testing Demo ---\n";
     UnitTestingModule utm;
-    utm.runAllTestsAndBenchmarks(); 
+    utm.runAllTestsAndBenchmarks();
 
 }
 
 
 void printMenu() {
-    cout << "   FAST University Discrete Mathematics Project          \n";
+    cout << "    FAST University Discrete Mathematics Project           \n";
 
     cout << "  1.  Scheduling\n";
     cout << "  2.  Grouping \n";
@@ -280,89 +410,91 @@ void printMenu() {
 
 void runAllDemos() {
     cout << "\n";
-    cout << "        RUNNING COMPREHENSIVE SYSTEM DEMO                \n";
-    
+    cout << "         RUNNING COMPREHENSIVE SYSTEM DEMO               \n";
+
     demoScheduling();
     cout << "\nPress Enter ";
     cin.ignore();
     cin.get();
-    
+
     demoGrouping();
     cout << "\nPress Enter";
     cin.get();
-    
+
     demoInduction();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoLogicEngine();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoSets();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoRelations();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoFunctions();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoProofs();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoConsistency();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoBenchmarking();
     cout << "\nPress Enter ";
     cin.get();
-    
+
     demoUnitTesting();
-    
+
     cout << "\n";
-    cout << "        ALL DEMOS COMPLETED SUCCESSFULLY!                 \n";
+    cout << "         ALL DEMOS COMPLETED SUCCESSFULLY!               \n";
 }
 
 int main() {
+    showWelcomeWindow();
+
     int choice = -1;
-    
-   
-    
+
+    cin.clear();
+
     while (true) {
         printMenu();
         cin >> choice;
 
         if (choice == 0) {
             cout << "\n";
-            cout << "               bye                      \n";
-           
+            cout << "              bye                         \n";
+
             break;
         }
 
         switch (choice) {
-            case 1: demoScheduling(); break;
-            case 2: demoGrouping(); break;
-            case 3: demoInduction(); break;
-            case 4: demoLogicEngine(); break;
-            case 5: demoSets(); break;
-            case 6: demoRelations(); break;
-            case 7: demoFunctions(); break;
-            case 8: demoProofs(); break;
-            case 9: demoConsistency(); break;
-            case 10: demoBenchmarking(); break;
-            case 11: demoUnitTesting(); break;
-            case 12: runAllDemos(); break;
-            default:
-                cout << "\nInvalid\n";
-                break;
+        case 1: demoScheduling(); break;
+        case 2: demoGrouping(); break;
+        case 3: demoInduction(); break;
+        case 4: demoLogicEngine(); break;
+        case 5: demoSets(); break;
+        case 6: demoRelations(); break;
+        case 7: demoFunctions(); break;
+        case 8: demoProofs(); break;
+        case 9: demoConsistency(); break;
+        case 10: demoBenchmarking(); break;
+        case 11: demoUnitTesting(); break;
+        case 12: runAllDemos(); break;
+        default:
+            cout << "\nInvalid\n";
+            break;
         }
-        
+
         if (choice >= 1 && choice <= 11) {
             cout << endl;
             cout << "Press Enter for main";
@@ -373,4 +505,3 @@ int main() {
 
     return 0;
 }
-
