@@ -1,9 +1,248 @@
-🎓 FAST University Course Management Framework🚀 OverviewThis project implements a high-level computational framework to model and manage the complex operational dependencies and rules of FAST University using Discrete Structures. The framework enforces rules related to course prerequisites, student enrollment, scheduling, and faculty assignments by leveraging core concepts such as Induction, Logic, Sets, Relations, and Functions.🏗️ Project Structure & ModulesThe framework is built around distinct modules, each addressing a specific university operation through discrete mathematics principles.Core Conceptual ModulesModuleCore FunctionalityDiscrete Concepts Used1. Induction & Strong InductionVerify multi-term course prerequisite chains (e.g., ensuring all indirect prerequisites are satisfied).Mathematical Induction, Strong Induction2. Logic & Inference EngineParse rules (e.g., faculty-course policies) and perform inference to detect conflicts or enforce policy validity.Propositional Logic, Predicate Logic, Inference Rules3. Relations ModuleDefine and check properties (reflexive, transitive, partial orders) of student-course, faculty-course, and course-room relations.Binary Relations, Equivalence Relations, Partial Orders, Relation Composition4. Functions ModuleModel assignments (e.g., courses $\to$ faculty); test for properties like injectivity, surjectivity, and bijectivity.Functions, Mappings, Composition, InverseApplication & Utility ModulesModuleCore FunctionalityDiscrete Concepts Used5. Course & SchedulingGenerate all valid course sequences for a semester using prerequisite rules efficiently.Recursive Algorithms, Dynamic Programming (DP)6. Set Operations ModuleRepresent and analyze students, courses, and faculty as sets; compute union, intersection, difference, and power sets.Set Theory, Set Operations7. Student Group CombinationAssign students to project groups, labs, and electives using combinatorial counting.Combinatorics, Counting Principles, Subsets8. Consistency CheckerDetect conflicts or violations across all modules (e.g., course overlaps, missing prerequisites, student overload).Set Intersections, Logic Inference9. Automated Proof & VerificationGenerate step-by-step formal proofs for prerequisites and logic rules.Proof Techniques, Formal Logic10. Algorithmic EfficiencyOptimize discrete operations for large datasets using memoization, recursion, and bitsets.Dynamic Programming, Recursion, Bit Manipulation💡 Conceptual Dry Runs1. Prerequisite Verification (Strong Induction)Rule: To take Advanced CS ($C_n$), a student must complete its immediate prerequisites ($C_{n-1}$), and by extension, all predecessors in the chain ($C_1, \dots, C_{n-2}$).Concept: The module uses strong induction to verify the validity of the entire prerequisite sequence $P(k)$ where $P(k)$ is the statement: "A student can enroll in the $k^{th}$ course if and only if courses $1, 2, \dots, k-1$ are completed." This requires the base case and the strong inductive step: $\big(\forall j \le k, P(j)\big) \to P(k+1)$.2. Enrollment Conflict Detection (Set Intersection)Task: Find all students who are simultaneously enrolled in both CS101 (Set $A$) and Math101 (Set $B$).Operation: The module calculates the set intersection:$$A \cap B = \{ x \mid x \in A \land x \in B \}$$Any non-empty result indicates students with potential scheduling conflicts (if the courses are offered at the same time).3. Faculty Assignment Check (Injective Function)Policy: Every course must be assigned to exactly one faculty member.Modeling: This is a function $f: \text{Courses} \to \text{Faculty}$. The function is guaranteed to be injective (one-to-one) if no two distinct courses are assigned to the same faculty. The module checks this mapping property:$$\forall c_1, c_2 \in \text{Courses}, f(c_1) = f(c_2) \implies c_1 = c_2$$🛠️ Installation and SetupPrerequisitesPython 3.x(Any specific libraries, e.g., numpy for efficiency)SetupBash# Clone the repository
-git clone https://github.com/FAST-University/Discrete-Structures-Framework.git
-cd Discrete-Structures-Framework
+# FAST University Discrete Structures Simulation
 
-# Install required dependencies (if any)
-pip install -r requirements.txt
-💻 UsageThe primary interaction point is the Command Line Interface (CLI).Running the ApplicationBashpython main.py
-CLI Commands (Example)CommandDescriptionExampleadd_studentAdds a new student record to the system.add_student S101 "Ali Khan"add_ruleAdds a new logic rule or prerequisite chain.add_rule "CS301 prereq CS201"verify_prereqsRuns the Induction Module to verify a course chain.verify_prereqs CS401run_inferenceExecutes the Logic Engine to check policy consistency.run_inference faculty_assignmentsfind_intersectionRuns the Set Operations Module.find_intersection CS101 MATH101✅ Unit Testing & BenchmarkingThe project includes an extensive suite of unit tests to ensure correctness and performance across all discrete structure operations, validating the system against formal definitions of sets, relations, and functions using real-world data sizes.To run the tests:Bashpython -m unittest discover tests
-🤝 ContributionContributions are welcome! Please feel free to open an issue or submit a pull request.📄 LicenseThis project is licensed under the [Specify License, e.g., MIT License].
+A Computational Framework for Courses, Prerequisites, Scheduling & Verification
+
+This project simulates FAST University’s academic operations using Discrete Structures concepts. It models students, courses, prerequisites, scheduling rules, logical constraints, relations, and functions—while automatically checking correctness through inference, induction, and structural validation.
+
+The system is built as a modular, scalable framework suitable for university-scale datasets.
+
+# Collabrators:
+Muhammad Hasham 24F-3039
+Hafsa akram 24F-3035
+Wajiha 24F-3013
+
+ # Project Goals
+
+The aim is to demonstrate how Discrete Structures can be applied to real university operations:
+
+✔ Verify multi-term prerequisite chains using induction
+
+✔ Generate legal course schedules
+
+✔ Perform logical inference on academic rules
+
+✔ Model relationships using sets, relations, and functions
+
+✔ Detect conflicts using relation properties
+
+✔ Ensure correctness through proof-based verification
+
+ # System Architecture & Modules
+1️⃣ Course & Scheduling Module
+
+Purpose:
+Generate all valid semester course sequences based on prerequisites.
+
+Core Concepts:
+
+Recursion
+
+Dynamic programming
+
+Partial order constraints
+
+Example:
+If CS201 → requires CS101 & CS102, the system ensures valid sequences only.
+
+2️⃣ Student Group Combination Module
+
+Purpose:
+Assign students to project groups, labs, and elective batches through combinatorial logic.
+
+Core Concepts:
+
+Sets
+
+Combinations and permutations
+
+Counting principles
+
+3️⃣ Induction & Strong Induction Module
+
+Purpose:
+Automatically validate multi-level prerequisites.
+
+Uses:
+
+Simple induction for linear chains
+
+Strong induction for indirect prerequisites
+
+Example:
+Advanced CS → requires Basic CS & Intro CS.
+System verifies every ancestor prerequisite.
+
+4️⃣ Logic & Inference Engine
+
+Purpose:
+Parse academic rules and verify logical consistency.
+
+Core Concepts:
+
+Propositional logic
+
+Predicate logic
+
+Modus ponens, syllogisms
+
+Tautology detection
+
+Example:
+“If Prof. X teaches CS101 → Lab must be Lab A.”
+Engine confirms whether allocation satisfies the rule.
+
+5️⃣ Set Operations Module
+
+Purpose:
+Represent all entities (students, courses, faculty, rooms) using sets.
+
+Supports:
+
+Union
+
+Intersection
+
+Difference
+
+Power sets
+
+Subset checks
+
+Example:
+Find students enrolled in both CS101 ∩ MATH101.
+
+6️⃣ Relations Module
+
+Purpose:
+Create relations such as student-course, course-room, faculty-course.
+
+Validates:
+
+Reflexive
+
+Symmetric
+
+Transitive
+
+Equivalence relations
+
+Partial orders
+
+Relation composition
+
+Example:
+Detect students indirectly enrolled in conflicting courses.
+
+7️⃣ Functions Module
+
+Purpose:
+Establish mappings and verify their mathematical properties.
+
+Examples:
+
+Students → Courses
+
+Courses → Faculty
+
+Faculty → Rooms
+
+Checks:
+
+Injectivity
+
+Surjectivity
+
+Bijectivity
+
+Function composition
+
+Inverse functions (if feasible)
+
+Example:
+Every course must map to exactly one faculty (injective).
+
+8️⃣ Automated Proof & Verification Module
+
+Purpose:
+Generate machine-readable proofs to verify course rules & prerequisite chains.
+
+Includes:
+
+Induction proofs
+
+Contradiction proofs
+
+Logical deductions
+
+Relation proofs
+
+9️⃣ Consistency Checker Module
+
+Purpose:
+Identify scheduling conflicts and rule violations.
+
+Detects:
+
+Course overlap
+
+Missing prerequisites
+
+Overloaded students
+
+Conflicting room assignments
+
+🔟 Algorithmic Efficiency & Benchmarking
+
+Purpose:
+Ensure high performance for university-scale data.
+
+Techniques:
+
+Memoization
+
+Recursion
+
+Bitsets
+
+Optimization using vectors
+
+Dynamic programming
+
+# CLI Interface
+
+A clean menu-based command-line system where users can:
+
+Add students
+
+Add courses
+
+Define prerequisites
+
+Assign faculty
+
+Run verifications
+
+Display relations and functions
+
+# Unit Testing & Benchmarking
+
+Includes automated tests for:
+
+Sets
+
+Relations
+
+Functions
+
+Logic rules
+
+Scheduling constraints
+
+Induction-based prerequisites
+
+Ensures correctness and performance.
+
+# Technologies Used
+
+C++ 
+raylib 
