@@ -7,11 +7,11 @@ This project simulates FAST University’s academic operations using Discrete St
 The system is built as a modular, scalable framework suitable for university-scale datasets.
 
 # Collabrators:
-Muhammad Hasham 24F-3039
+Muhammad Hasham 24F-3039 (7-11 + raylib)
 
-Hafsa akram 24F-3035
+Hafsa akram 24F-3035 (4-6,12)
 
-Wajiha 24F-3013
+Wajiha 24F-3013 (1-3,12)
 
  # Project Goals
 
