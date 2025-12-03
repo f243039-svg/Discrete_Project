@@ -11,6 +11,7 @@ class FunctionModule {
 private:
     string domain[MAX_FUNC];
     string codomain[MAX_FUNC];
+    //ordered pairs 
     string mappingDomain[MAX_FUNC];
     string mappingRange[MAX_FUNC];
     int domainCount;
@@ -76,7 +77,7 @@ public:
 
     //  one to one 
     bool isInjective() {
-        
+
         for (int i = 0; i < mappingCount; i++) {
             for (int j = i + 1; j < mappingCount; j++) {
                 if (mappingRange[i] == mappingRange[j] &&
@@ -88,7 +89,7 @@ public:
     }
     //onto
     bool isSurjective() {
-        
+
         for (int i = 0; i < codomainCount; i++) {
             string y = codomain[i];
             bool found = false;
@@ -105,6 +106,7 @@ public:
         return isInjective() && isSurjective();
     }
 
+    //loop throuhg the mappings and return the coresponding range 
     string applyFunction(const string& x) {
         for (int i = 0; i < mappingCount; i++)
             if (mappingDomain[i] == x)
@@ -115,27 +117,30 @@ public:
     //range of G must be subset of domain of F
     //output of G is the input of F
     void compose(FunctionModule& g, FunctionModule& result) {
-        result.domainCount = domainCount;
+
+        // domain of result = domain of g
+        result.domainCount = g.domainCount;
+        for (int i = 0; i < g.domainCount; i++)
+            result.domain[i] = g.domain[i];
+
+        // codomain of result is codomain of f
         result.codomainCount = codomainCount;
-
-        //domain of result should be domain of g
-        //codomain of result should be codomain of F
-        for (int i = 0; i < domainCount; i++)
-            result.domain[i] = domain[i];
-
         for (int i = 0; i < codomainCount; i++)
             result.codomain[i] = codomain[i];
 
         result.mappingCount = 0;
 
-        for (int i = 0; i < domainCount; i++) {
-            string x = domain[i];
+        // For all x in domain of g
+        for (int i = 0; i < g.domainCount; i++) {
+            string x = g.domain[i];
             string gx = g.applyFunction(x);
-            string fx = applyFunction(gx);
+            string fgx = applyFunction(gx);
 
-            result.addMapping(x, fx);
+            // Add mapping: x ,f(g(x))
+            result.addMapping(x, fgx);
         }
     }
+
     // return inverse if the function is injective 
     // swap domain and codomain 
     bool inverse(FunctionModule& inv) {
