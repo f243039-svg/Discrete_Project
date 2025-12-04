@@ -4,13 +4,13 @@
 #include <iostream>
 #include <string>
 using namespace std;
+//arr size fix
+const int MAX_RULES = 100;//rules at 1 time
+const int MAX_PREMISES = 10;//premises of 1 rule
+const int MAX_FACTS = 200;//max facts
+const int MAX_LOG = 500;//inference ki mssg store krny ki max limit
 
-const int MAX_RULES = 100;
-const int MAX_PREMISES = 10;
-const int MAX_FACTS = 200;
-const int MAX_LOG = 500;
-
-class LogicRule {
+class LogicRule {//ek single rule a structure
 public:
     string id;
     string premises[MAX_PREMISES];
@@ -21,48 +21,48 @@ public:
     LogicRule() {
         id = "";
         conclusion = "";
-        description = "";
-        premiseCount = 0;
+        description = "";//optional text for explanation
+        premiseCount = 0;//no of conditions
     }
-
-    void set(const string& ruleID,
-        const string pList[],
-        int pCount,
-        const string& concl,
-        const string& desc = "")
+//initializing rule
+    void set(const string& ruleID, const string pList[], int pCount, const string& concl, const string& desc = "")
     {
-        id = ruleID;
+        id = ruleID;//rule name
         premiseCount = pCount;
+        //p copy
+        //c set
+        //desc set
         for (int x = 0; x < pCount; x++) {
             premises[x] = pList[x];
         }
         conclusion = concl;
         description = desc;
     }
-};
+};//p1^p2....pn->q
 
 class LogicEngine {
+//manages all rules ,facts or inference
 private:
-    LogicRule rules[MAX_RULES];
-    int ruleCount;
-    string factNames[MAX_FACTS];
-    bool factValues[MAX_FACTS];
-    int factCount;
-    string inferenceLog[MAX_LOG];
-    int logCount;
+    LogicRule rules[MAX_RULES];//rules
+    int ruleCount;//currently added rules
+    string factNames[MAX_FACTS];//name of all fact
+    bool factValues[MAX_FACTS];//t/f of fact
+    int factCount;//total fact
+    string inferenceLog[MAX_LOG];//record of applied rules
+    int logCount;//log enteries
 
     int findFactIndex(const string& name) {
         for (int idx = 0; idx < factCount; idx++) {
             if (factNames[idx] == name)
                 return idx;
         }
-        return -1;
+        return -1;//fact address return kryga
     }
 
     bool evaluatePremises(const LogicRule& r) {
         for (int p = 0; p < r.premiseCount; p++) {
             string premText = r.premises[p];
-            if (premText[0] == '!') {
+            if (premText[0] == '!') {//negation
                 string actual = premText.substr(1);
                 int fIndex = findFactIndex(actual);
                 if (fIndex == -1 || factValues[fIndex] == true)
@@ -76,7 +76,7 @@ private:
         }
         return true;
     }
-
+//adds mssg to inference
     void addLog(const string& msg) {
         if (logCount < MAX_LOG) {
             inferenceLog[logCount++] = msg;
@@ -104,7 +104,7 @@ public:
     void setFact(const string& name, bool value) {
         int fIndex = findFactIndex(name);
         if (fIndex == -1) {
-            fIndex = factCount++;
+            fIndex = factCount++;//t/f set kryga
             factNames[fIndex] = name;
         }
         factValues[fIndex] = value;
@@ -112,7 +112,7 @@ public:
 
     bool getFact(const string& name) {
         int fIndex = findFactIndex(name);
-        return (fIndex != -1 && factValues[fIndex]);
+        return (fIndex != -1 && factValues[fIndex]);//return kryga
     }
 
     int forwardChaining() {
@@ -123,14 +123,14 @@ public:
         bool didChange = true;
 
         while (didChange) {
-            didChange = false;
+            didChange = false;//hr rule ko check kryga agr conclusion true toh skip if premises satisfied conclusion fact list mein add ->new fact generate
             for (int r = 0; r < ruleCount; r++) {
                 int conclIndex = findFactIndex(rules[r].conclusion);
                 if (conclIndex != -1 && factValues[conclIndex] == true)
-                    continue;
-                if (evaluatePremises(rules[r])) {
+                    continue;//skip if c already known
+                if (evaluatePremises(rules[r])) {//p true
                     setFact(rules[r].conclusion, true);
-                    newFacts++;
+                    newFacts++;//add new facts
                     string logMsg = "rule " + rules[r].id + " applied: ";
                     for (int p = 0; p < rules[r].premiseCount; p++) {
                         logMsg += rules[r].premises[p];
