@@ -11,8 +11,6 @@ Muhammad Hasham 24F-3039 (7-11 + raylib)
 
 Hafsa akram 24F-3035 (4-6,12)
 
-Wajiha 24F-3013 (1-3,12)
-
  # Project Goals
 
 The aim is to demonstrate how Discrete Structures can be applied to real university operations:
